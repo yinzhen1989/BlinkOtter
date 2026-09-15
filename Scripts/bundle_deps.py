@@ -72,9 +72,8 @@ formulae = sorted({source.parts[4] for source in copied.values()
 for formula in formulae:
     matching = [p for p in copied.values() if p.parts[4] == formula]
     cellar = pathlib.Path("/opt/homebrew/Cellar") / formula / matching[0].parts[5]
-    for license_file in cellar.glob("LICENSE*"):
-        shutil.copy2(license_file, third_party / f"{formula}-{license_file.name}")
-    for license_file in cellar.glob("COPYING*"):
-        shutil.copy2(license_file, third_party / f"{formula}-{license_file.name}")
+    for pattern in ("LICENSE*", "COPYING*", "Copyright"):
+        for license_file in cellar.glob(pattern):
+            shutil.copy2(license_file, third_party / f"{formula}-{license_file.name}")
 (third_party / "bundled-formulae.txt").write_text("\n".join(formulae) + "\n")
 print(f"Bundled {len(copied)} dynamic libraries ({sum(p.stat().st_size for p in frameworks.iterdir()) // 1024 // 1024} MiB)")
