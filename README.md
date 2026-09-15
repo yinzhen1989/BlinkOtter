@@ -19,7 +19,7 @@ Requirements: Apple Silicon Mac, macOS 13 or newer, Xcode command-line tools, Ho
 
 ```bash
 brew install mpv
-Scripts/build.sh
+bash Scripts/build.sh
 ```
 
 The build produces `build/BlinkOtter.app` and `build/BlinkOtter-0.1.0-arm64.dmg`. The script copies mpv and its linked Homebrew libraries into the app bundle, rewrites library references, ad-hoc signs the bundle, and creates the disk image. No Homebrew installation is needed to play with the bundled app. The disk image contains an Applications shortcut for installation.
