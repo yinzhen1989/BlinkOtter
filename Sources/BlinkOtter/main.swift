@@ -1,15 +1,18 @@
 import AppKit
 
 private enum Theme {
-    static let background = NSColor(calibratedRed: 0.05, green: 0.07, blue: 0.12, alpha: 1)
-    static let panel = NSColor(calibratedRed: 0.09, green: 0.12, blue: 0.19, alpha: 1)
-    static let surface = NSColor(calibratedRed: 0.17, green: 0.22, blue: 0.31, alpha: 1)
-    static let mint = NSColor(calibratedRed: 0.48, green: 0.93, blue: 0.81, alpha: 1)
-    static let text = NSColor(calibratedRed: 0.95, green: 0.98, blue: 0.98, alpha: 1)
-    static let secondary = NSColor(calibratedRed: 0.55, green: 0.65, blue: 0.73, alpha: 1)
+    static let background = NSColor(calibratedRed: 0.035, green: 0.038, blue: 0.045, alpha: 1)
+    static let panel = NSColor(calibratedRed: 0.075, green: 0.078, blue: 0.085, alpha: 0.94)
+    static let surface = NSColor(calibratedRed: 0.16, green: 0.17, blue: 0.18, alpha: 1)
+    static let accent = NSColor(calibratedRed: 0.93, green: 0.25, blue: 0.25, alpha: 1)
+    static let text = NSColor(calibratedRed: 0.97, green: 0.96, blue: 0.95, alpha: 1)
+    static let secondary = NSColor(calibratedRed: 0.58, green: 0.59, blue: 0.60, alpha: 1)
 }
 
 private final class PassthroughStackView: NSStackView {
+    override func hitTest(_ point: NSPoint) -> NSView? { nil }
+}
+private final class PassthroughImageView: NSImageView {
     override func hitTest(_ point: NSPoint) -> NSView? { nil }
 }
 
@@ -33,6 +36,7 @@ private final class PlayerWindow: NSWindowController {
     private var playlist: [URL] = []
     private var playlistIndex = 0
     private var welcomeView: NSStackView?
+    private var welcomeArt: NSImageView?
 
     init() {
         let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1080, height: 690),
@@ -43,7 +47,7 @@ private final class PlayerWindow: NSWindowController {
         window.titlebarAppearsTransparent = true
         window.appearance = NSAppearance(named: .darkAqua)
         window.backgroundColor = Theme.background
-        window.minSize = NSSize(width: 760, height: 480)
+        window.minSize = NSSize(width: 820, height: 520)
         window.center()
         super.init(window: window)
         buildUI()
@@ -63,7 +67,7 @@ private final class PlayerWindow: NSWindowController {
     private func icon(_ size: CGFloat) -> NSImageView {
         let image = Bundle.main.path(forResource: "BlinkOtter-1024", ofType: "png")
             .flatMap { NSImage(contentsOfFile: $0) } ?? NSImage()
-        let view = NSImageView(image: image)
+        let view = PassthroughImageView(image: image)
         view.imageScaling = .scaleProportionallyUpOrDown
         view.translatesAutoresizingMaskIntoConstraints = false
         view.widthAnchor.constraint(equalToConstant: size).isActive = true
@@ -80,9 +84,9 @@ private final class PlayerWindow: NSWindowController {
         button.toolTip = tooltip
         button.isBordered = false
         button.wantsLayer = true
-        button.layer?.cornerRadius = size / 2
-        button.layer?.backgroundColor = (prominent ? Theme.mint : Theme.surface).cgColor
-        button.contentTintColor = prominent ? Theme.background : Theme.text
+        button.layer?.cornerRadius = prominent ? 9 : 6
+        button.layer?.backgroundColor = (prominent ? Theme.accent : Theme.surface).cgColor
+        button.contentTintColor = Theme.text
         button.translatesAutoresizingMaskIntoConstraints = false
         button.widthAnchor.constraint(equalToConstant: size).isActive = true
         button.heightAnchor.constraint(equalToConstant: size).isActive = true
@@ -98,9 +102,9 @@ private final class PlayerWindow: NSWindowController {
         button.font = .systemFont(ofSize: 12, weight: .semibold)
         button.isBordered = false
         button.wantsLayer = true
-        button.layer?.cornerRadius = 11
-        button.layer?.backgroundColor = (accent ? Theme.mint : Theme.surface).cgColor
-        button.contentTintColor = accent ? Theme.background : Theme.text
+        button.layer?.cornerRadius = 6
+        button.layer?.backgroundColor = (accent ? Theme.accent : Theme.surface).cgColor
+        button.contentTintColor = Theme.text
         button.translatesAutoresizingMaskIntoConstraints = false
         button.widthAnchor.constraint(equalToConstant: width).isActive = true
         button.heightAnchor.constraint(equalToConstant: 34).isActive = true
@@ -113,44 +117,48 @@ private final class PlayerWindow: NSWindowController {
         let header = panel(Theme.panel)
         let stage = panel(Theme.background)
         let controls = panel(Theme.panel)
-        content.addSubview(header)
         content.addSubview(stage)
+        content.addSubview(header)
         content.addSubview(controls)
         NSLayoutConstraint.activate([
+            stage.leadingAnchor.constraint(equalTo: content.leadingAnchor),
+            stage.trailingAnchor.constraint(equalTo: content.trailingAnchor),
+            stage.topAnchor.constraint(equalTo: content.topAnchor),
+            stage.bottomAnchor.constraint(equalTo: content.bottomAnchor),
             header.leadingAnchor.constraint(equalTo: content.leadingAnchor),
             header.trailingAnchor.constraint(equalTo: content.trailingAnchor),
             header.topAnchor.constraint(equalTo: content.topAnchor),
-            header.heightAnchor.constraint(equalToConstant: 76),
-            stage.leadingAnchor.constraint(equalTo: content.leadingAnchor),
-            stage.trailingAnchor.constraint(equalTo: content.trailingAnchor),
-            stage.topAnchor.constraint(equalTo: header.bottomAnchor),
-            stage.bottomAnchor.constraint(equalTo: controls.topAnchor),
+            header.heightAnchor.constraint(equalToConstant: 70),
             controls.leadingAnchor.constraint(equalTo: content.leadingAnchor),
             controls.trailingAnchor.constraint(equalTo: content.trailingAnchor),
             controls.bottomAnchor.constraint(equalTo: content.bottomAnchor),
-            controls.heightAnchor.constraint(equalToConstant: 118)
+            controls.heightAnchor.constraint(equalToConstant: 104)
         ])
 
-        let brand = NSTextField(labelWithString: "BlinkOtter")
-        brand.font = .systemFont(ofSize: 18, weight: .bold)
+        let brand = NSTextField(labelWithString: "BLINKOTTER")
+        brand.font = .systemFont(ofSize: 13, weight: .heavy)
         brand.textColor = Theme.text
-        let brandRow = NSStackView(views: [icon(34), brand])
-        brandRow.spacing = 9
+        brand.attributedStringValue = NSAttributedString(string: "BLINKOTTER", attributes: [
+            .font: NSFont.systemFont(ofSize: 13, weight: .heavy), .foregroundColor: Theme.text,
+            .kern: 2.1
+        ])
+        let brandRow = NSStackView(views: [icon(27), brand])
+        brandRow.spacing = 11
         brandRow.alignment = .centerY
         brandRow.translatesAutoresizingMaskIntoConstraints = false
         header.addSubview(brandRow)
-        fileLabel.font = .systemFont(ofSize: 13, weight: .medium)
+        fileLabel.font = .systemFont(ofSize: 13, weight: .semibold)
         fileLabel.textColor = Theme.text
         fileLabel.lineBreakMode = .byTruncatingMiddle
         queueLabel.font = .systemFont(ofSize: 10, weight: .bold)
-        queueLabel.textColor = Theme.secondary
+        queueLabel.textColor = Theme.accent
         let fileInfo = NSStackView(views: [fileLabel, queueLabel])
         fileInfo.orientation = .vertical
         fileInfo.alignment = .leading
         fileInfo.spacing = 2
         fileInfo.translatesAutoresizingMaskIntoConstraints = false
         header.addSubview(fileInfo)
-        let openButton = textButton("＋  Open video", action: #selector(openPanel), width: 132, accent: true)
+        let openButton = textButton("OPEN VIDEO", action: #selector(openPanel), width: 117, accent: true)
         header.addSubview(openButton)
         NSLayoutConstraint.activate([
             brandRow.leadingAnchor.constraint(equalTo: header.leadingAnchor, constant: 86),
@@ -159,7 +167,7 @@ private final class PlayerWindow: NSWindowController {
             fileInfo.centerYAnchor.constraint(equalTo: brandRow.centerYAnchor),
             fileInfo.trailingAnchor.constraint(equalTo: openButton.leadingAnchor, constant: -20),
             fileLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 420),
-            openButton.trailingAnchor.constraint(equalTo: header.trailingAnchor, constant: -22),
+            openButton.trailingAnchor.constraint(equalTo: header.trailingAnchor, constant: -26),
             openButton.centerYAnchor.constraint(equalTo: brandRow.centerYAnchor)
         ])
 
@@ -171,36 +179,47 @@ private final class PlayerWindow: NSWindowController {
             video.topAnchor.constraint(equalTo: stage.topAnchor),
             video.bottomAnchor.constraint(equalTo: stage.bottomAnchor)
         ])
-        titleLabel.stringValue = "Your screen, your story."
-        titleLabel.font = .systemFont(ofSize: 24, weight: .bold)
+        let eyebrow = NSTextField(labelWithString: "THE SCREEN IS YOURS")
+        eyebrow.attributedStringValue = NSAttributedString(string: "THE SCREEN IS YOURS", attributes: [
+            .font: NSFont.systemFont(ofSize: 10, weight: .heavy), .foregroundColor: Theme.accent,
+            .kern: 2.6
+        ])
+        titleLabel.stringValue = "PLAY\nANYTHING."
+        titleLabel.font = .systemFont(ofSize: 56, weight: .heavy)
         titleLabel.textColor = Theme.text
-        titleLabel.alignment = .center
+        titleLabel.alignment = .left
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        let hint = NSTextField(labelWithString: "Drop a video here or choose one to begin")
-        hint.font = .systemFont(ofSize: 14)
+        let hint = NSTextField(labelWithString: "Drop a video here. We'll take it from there.")
+        hint.font = .systemFont(ofSize: 14, weight: .medium)
         hint.textColor = Theme.secondary
-        hint.alignment = .center
-        let formats = NSTextField(labelWithString: "MP4  ·  MKV  ·  MOV  ·  AVI  ·  WEBM  + more")
-        formats.font = .systemFont(ofSize: 11, weight: .medium)
+        hint.alignment = .left
+        let formats = NSTextField(labelWithString: "MP4   /   MKV   /   MOV   /   AVI   /   WEBM")
+        formats.font = .systemFont(ofSize: 10, weight: .semibold)
         formats.textColor = Theme.secondary
-        formats.alignment = .center
-        let welcome = PassthroughStackView(views: [icon(116), titleLabel, hint, formats])
+        formats.alignment = .left
+        let welcome = PassthroughStackView(views: [eyebrow, titleLabel, hint, formats])
         welcome.orientation = .vertical
-        welcome.alignment = .centerX
-        welcome.spacing = 13
+        welcome.alignment = .leading
+        welcome.spacing = 16
         welcome.translatesAutoresizingMaskIntoConstraints = false
         stage.addSubview(welcome)
+        let welcomeArt = icon(192)
+        stage.addSubview(welcomeArt)
         welcomeView = welcome
+        self.welcomeArt = welcomeArt
         NSLayoutConstraint.activate([
-            welcome.centerXAnchor.constraint(equalTo: stage.centerXAnchor),
-            welcome.centerYAnchor.constraint(equalTo: stage.centerYAnchor)
+            welcome.leadingAnchor.constraint(equalTo: stage.leadingAnchor, constant: 86),
+            welcome.centerYAnchor.constraint(equalTo: stage.centerYAnchor, constant: -8),
+            titleLabel.widthAnchor.constraint(equalToConstant: 410),
+            welcomeArt.trailingAnchor.constraint(equalTo: stage.trailingAnchor, constant: -84),
+            welcomeArt.centerYAnchor.constraint(equalTo: stage.centerYAnchor, constant: -8)
         ])
 
         seekSlider.target = self
         seekSlider.action = #selector(seek)
         seekSlider.isContinuous = false
-        seekSlider.trackFillColor = Theme.mint
-        timeLabel.textColor = Theme.secondary
+        seekSlider.trackFillColor = Theme.accent
+        timeLabel.textColor = Theme.text
         timeLabel.font = .monospacedDigitSystemFont(ofSize: 12, weight: .medium)
         let timeline = NSStackView(views: [seekSlider, timeLabel])
         timeline.alignment = .centerY
@@ -211,21 +230,21 @@ private final class PlayerWindow: NSWindowController {
 
         previousButton.target = self
         previousButton.action = #selector(previousFile)
-        style(previousButton, symbol: "backward.end.fill", fallback: "⏮", tooltip: "Previous video")
+        style(previousButton, symbol: "backward.end.fill", fallback: "⏮", tooltip: "Previous video", size: 30)
         nextButton.target = self
         nextButton.action = #selector(nextFile)
-        style(nextButton, symbol: "forward.end.fill", fallback: "⏭", tooltip: "Next video")
-        let back = symbol("gobackward.10", fallback: "↶", tooltip: "Back 10 seconds", action: #selector(rewindTen))
-        let ahead = symbol("goforward.10", fallback: "↷", tooltip: "Forward 10 seconds", action: #selector(forwardTen))
+        style(nextButton, symbol: "forward.end.fill", fallback: "⏭", tooltip: "Next video", size: 30)
+        let back = symbol("gobackward.10", fallback: "↶", tooltip: "Back 10 seconds", action: #selector(rewindTen), size: 30)
+        let ahead = symbol("goforward.10", fallback: "↷", tooltip: "Forward 10 seconds", action: #selector(forwardTen), size: 30)
         playButton.target = self
         playButton.action = #selector(togglePause)
-        style(playButton, symbol: "play.fill", fallback: "▶", tooltip: "Play or pause", size: 48, prominent: true)
+        style(playButton, symbol: "play.fill", fallback: "▶", tooltip: "Play or pause", size: 42, prominent: true)
         muteButton.target = self
         muteButton.action = #selector(toggleMute)
         style(muteButton, symbol: "speaker.wave.2.fill", fallback: "♫", tooltip: "Mute audio", size: 32)
         volumeSlider.target = self
         volumeSlider.action = #selector(changeVolume)
-        volumeSlider.trackFillColor = Theme.mint
+        volumeSlider.trackFillColor = Theme.accent
         volumeSlider.translatesAutoresizingMaskIntoConstraints = false
         volumeSlider.widthAnchor.constraint(equalToConstant: 86).isActive = true
         speedButton.target = self
@@ -237,24 +256,24 @@ private final class PlayerWindow: NSWindowController {
         subtitleButton.toolTip = "Subtitle tracks"
         audioButton.target = self
         audioButton.action = #selector(showAudioMenu)
-        style(audioButton, symbol: "waveform", fallback: "♪", tooltip: "Audio tracks", size: 34)
+        style(audioButton, symbol: "waveform", fallback: "♪", tooltip: "Audio tracks", size: 30)
         let full = symbol("arrow.up.left.and.arrow.down.right", fallback: "⛶", tooltip: "Full screen",
-                          action: #selector(fullScreen), size: 34)
+                          action: #selector(fullScreen), size: 30)
         let spacer = NSView()
         spacer.setContentHuggingPriority(.defaultLow, for: .horizontal)
         let row = NSStackView(views: [previousButton, back, playButton, ahead, nextButton,
                                       spacer, muteButton, volumeSlider, speedButton, subtitleButton, audioButton, full])
         row.alignment = .centerY
-        row.spacing = 9
+        row.spacing = 8
         row.translatesAutoresizingMaskIntoConstraints = false
         controls.addSubview(row)
         NSLayoutConstraint.activate([
             timeline.leadingAnchor.constraint(equalTo: controls.leadingAnchor, constant: 25),
             timeline.trailingAnchor.constraint(equalTo: controls.trailingAnchor, constant: -25),
-            timeline.topAnchor.constraint(equalTo: controls.topAnchor, constant: 12),
+            timeline.topAnchor.constraint(equalTo: controls.topAnchor, constant: 9),
             row.leadingAnchor.constraint(equalTo: timeline.leadingAnchor),
             row.trailingAnchor.constraint(equalTo: timeline.trailingAnchor),
-            row.bottomAnchor.constraint(equalTo: controls.bottomAnchor, constant: -17),
+            row.bottomAnchor.constraint(equalTo: controls.bottomAnchor, constant: -16),
             spacer.widthAnchor.constraint(greaterThanOrEqualToConstant: 12)
         ])
         updatePlaylistControls()
@@ -264,7 +283,7 @@ private final class PlayerWindow: NSWindowController {
         button.font = .systemFont(ofSize: 12, weight: .bold)
         button.isBordered = false
         button.wantsLayer = true
-        button.layer?.cornerRadius = 11
+        button.layer?.cornerRadius = 6
         button.layer?.backgroundColor = Theme.surface.cgColor
         button.contentTintColor = Theme.text
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -291,6 +310,7 @@ private final class PlayerWindow: NSWindowController {
         }
         guard mpv?.loadFile(url.path) == true else { return }
         welcomeView?.isHidden = true
+        welcomeArt?.isHidden = true
         fileLabel.stringValue = url.lastPathComponent
         window?.title = "\(url.lastPathComponent) — BlinkOtter"
         updatePlaylistControls()
@@ -299,7 +319,7 @@ private final class PlayerWindow: NSWindowController {
         previousButton.isEnabled = playlistIndex > 0
         nextButton.isEnabled = playlistIndex + 1 < playlist.count
         queueLabel.stringValue = playlist.isEmpty ? "READY TO PLAY" :
-            (playlist.count == 1 ? "NOW PLAYING" : "VIDEO \(playlistIndex + 1) OF \(playlist.count)")
+            (playlist.count == 1 ? "NOW WATCHING" : "VIDEO \(playlistIndex + 1) OF \(playlist.count)")
     }
     @objc func openPanel() {
         let panel = NSOpenPanel()

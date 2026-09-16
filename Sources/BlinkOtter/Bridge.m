@@ -74,6 +74,7 @@ static void requestDraw(void *context) {
     if (!_mpv) return nil;
     mpv_set_option_string(_mpv, "hwdec", "auto-safe");
     mpv_set_option_string(_mpv, "keep-open", "yes");
+    mpv_set_option_string(_mpv, "sub-pos", "78");
     if (mpv_initialize(_mpv) < 0) return nil;
     if (mpv_set_option_string(_mpv, "vo", "libmpv") < 0) return nil;
     [[view openGLContext] makeCurrentContext];
