@@ -4,15 +4,19 @@ A small, native, open-source video player for macOS. Open a file with **⌘O**, 
 
 **This project is Vibe coded.** The initial Swift interface, packaging scripts, and documentation were developed in collaboration with Codex, then compiled and checked on a real Apple Silicon Mac. AI-generated work is reviewed against actual build and playback results; the label is about the process, not a performance claim.
 
-## What works in 0.2.1
+## What works in 0.3.0
 
 - Native macOS window with file open and drag-and-drop.
 - Playback, pause, timeline seek, and full screen.
 - VideoToolbox hardware decoding when mpv considers it safe and supported.
-- Dark, modernized AppKit interface with a custom otter app icon.
+- Cinematic AppKit interface with an immersive video stage, editorial empty state, charcoal controls, and a red play accent.
+- Original cute otter icon in editable SVG, matching the dark and red player palette.
 - Multiple-file open and a previous/next video queue.
 - Volume and mute, six playback speeds, 10-second skip buttons, and audio/subtitle track menus.
+- Text subtitles sit above the overlaid playback controls.
 - A self-contained Apple Silicon `.app` and drag-to-Applications `.dmg` built from source.
+
+The 0.3.0 visual direction was inspired by a [cinematic fullscreen reference](https://www.pinterest.com/pin/1337074874706698/): dark negative space, restrained white typography, and a fine red playback accent. The otter artwork and AppKit layout are original to BlinkOtter; no film frame from the reference is bundled.
 
 BlinkOtter does **not** yet include Japanese/English-to-Chinese live subtitles. Subtitle translation and speech recognition are planned as background tasks so that they never delay the first frame. The current release also has no measured claim of “90% of formats” or “instant opening” for every large file; those require a public sample set and benchmarks across codecs, storage types, and Mac models. DRM media is outside the target.
 
@@ -25,11 +29,11 @@ brew install mpv
 bash Scripts/build.sh
 ```
 
-The build produces `build/BlinkOtter.app` and `build/BlinkOtter-0.2.1-arm64.dmg`. The script copies mpv and its linked Homebrew libraries into the app bundle, rewrites library references, ad-hoc signs the bundle, and creates the disk image. No Homebrew installation is needed to play with the bundled app. The disk image contains an Applications shortcut for installation.
+The build produces `build/BlinkOtter.app` and `build/BlinkOtter-0.3.0-arm64.dmg`. The script copies mpv and its linked Homebrew libraries into the app bundle, rewrites library references, ad-hoc signs the bundle, and creates the disk image. No Homebrew installation is needed to play with the bundled app. The disk image contains an Applications shortcut for installation.
 
-The 0.2.1 DMG is **ad-hoc signed and not notarized**. For a smooth public download, a maintainer must add an Apple Developer ID certificate, hardened runtime, and notarization. Apple explains the [distribution and notarization requirements](https://developer.apple.com/documentation/xcode/packaging-mac-software-for-distribution).
+The 0.3.0 DMG is **ad-hoc signed and not notarized**. For a smooth public download, a maintainer must add an Apple Developer ID certificate, hardened runtime, and notarization. Apple explains the [distribution and notarization requirements](https://developer.apple.com/documentation/xcode/packaging-mac-software-for-distribution).
 
-Open one or several files with **⌘O**. The previous/next buttons follow the order selected in the file panel. **Space** pauses or plays; **J/L** skip back/forward 10 seconds; **M** mutes; **F** enters full screen. The CC and waveform menus choose subtitle and audio tracks when the file provides them. A same-name `.srt` file beside a video is picked up by mpv. The warm otter icon lives in editable vector form at `Resources/BlinkOtter.svg`; `bash Scripts/make_icon.sh` regenerates its PNG and ICNS files if `rsvg-convert` is installed.
+Open one or several files with **⌘O**. The previous/next buttons follow the order selected in the file panel. **Space** pauses or plays; **J/L** skip back/forward 10 seconds; **M** mutes; **F** enters full screen. The CC and waveform menus choose subtitle and audio tracks when the file provides them. A same-name `.srt` file beside a video is picked up by mpv. The cinematic otter icon lives in editable vector form at `Resources/BlinkOtter.svg`; `bash Scripts/make_icon.sh` regenerates its PNG and ICNS files if `rsvg-convert` is installed.
 
 ## Open source and third parties
 
