@@ -121,4 +121,77 @@ static void requestDraw(void *context) {
     int paused = 0;
     return mpv_get_property(_mpv, "pause", MPV_FORMAT_FLAG, &paused) >= 0 && paused;
 }
+- (double)volume { return [self getDouble:"volume"]; }
+- (void)setVolume:(double)value { mpv_set_property_async(_mpv, 0, "volume", MPV_FORMAT_DOUBLE, &value); }
+- (BOOL)isMuted {
+    int muted = 0;
+    return mpv_get_property(_mpv, "mute", MPV_FORMAT_FLAG, &muted) >= 0 && muted;
+}
+- (void)toggleMute { const char *args[] = {"cycle", "mute", NULL}; mpv_command_async(_mpv, 0, args); }
+- (double)speed { return [self getDouble:"speed"]; }
+- (void)setSpeed:(double)value { mpv_set_property_async(_mpv, 0, "speed", MPV_FORMAT_DOUBLE, &value); }
+- (int64_t)trackListCount {
+    int64_t count = 0;
+    return mpv_get_property(_mpv, "track-list/count", MPV_FORMAT_INT64, &count) >= 0 ? count : 0;
+}
+- (NSString *)trackString:(int64_t)index field:(NSString *)field {
+    NSString *key = [NSString stringWithFormat:@"track-list/%lld/%@", index, field];
+    char *value = NULL;
+    if (mpv_get_property(_mpv, key.UTF8String, MPV_FORMAT_STRING, &value) < 0 || !value) return @"";
+    NSString *result = [NSString stringWithUTF8String:value] ?: @"";
+    mpv_free(value);
+    return result;
+}
+- (int64_t)trackID:(int64_t)index {
+    NSString *key = [NSString stringWithFormat:@"track-list/%lld/id", index];
+    int64_t value = -1;
+    mpv_get_property(_mpv, key.UTF8String, MPV_FORMAT_INT64, &value);
+    return value;
+}
+- (int64_t)trackIndexForType:(NSString *)type at:(NSInteger)ordinal {
+    NSInteger found = 0;
+    for (int64_t i = 0; i < [self trackListCount]; i++) {
+        if ([[self trackString:i field:@"type"] isEqualToString:type]) {
+            if (found++ == ordinal) return i;
+        }
+    }
+    return -1;
+}
+- (NSInteger)countForType:(NSString *)type {
+    NSInteger count = 0;
+    for (int64_t i = 0; i < [self trackListCount]; i++) {
+        if ([[self trackString:i field:@"type"] isEqualToString:type]) count++;
+    }
+    return count;
+}
+- (NSString *)labelForType:(NSString *)type at:(NSInteger)ordinal {
+    int64_t index = [self trackIndexForType:type at:ordinal];
+    if (index < 0) return @"Unknown";
+    NSString *language = [self trackString:index field:@"lang"];
+    NSString *title = [self trackString:index field:@"title"];
+    NSString *kind = [type isEqualToString:@"sub"] ? @"Subtitle" : @"Audio";
+    NSString *base = language.length ? language.uppercaseString : kind;
+    return title.length ? [NSString stringWithFormat:@"%@ · %@", base, title] :
+                          [NSString stringWithFormat:@"%@ %ld", base, (long)ordinal + 1];
+}
+- (NSInteger)subtitleTrackCount { return [self countForType:@"sub"]; }
+- (NSString *)subtitleTrackLabelAt:(NSInteger)index { return [self labelForType:@"sub" at:index]; }
+- (NSInteger)subtitleTrackIDAt:(NSInteger)index { return [self trackID:[self trackIndexForType:@"sub" at:index]]; }
+- (void)setSubtitleTrack:(NSInteger)trackID {
+    NSString *value = trackID < 0 ? @"no" : [NSString stringWithFormat:@"%ld", (long)trackID];
+    mpv_set_property_string(_mpv, "sid", value.UTF8String);
+}
+- (NSInteger)audioTrackCount { return [self countForType:@"audio"]; }
+- (NSString *)audioTrackLabelAt:(NSInteger)index { return [self labelForType:@"audio" at:index]; }
+- (NSInteger)audioTrackIDAt:(NSInteger)index { return [self trackID:[self trackIndexForType:@"audio" at:index]]; }
+- (void)setAudioTrack:(NSInteger)trackID {
+    NSString *value = [NSString stringWithFormat:@"%ld", (long)trackID];
+    mpv_set_property_string(_mpv, "aid", value.UTF8String);
+}
+- (NSInteger)selectedTrack:(const char *)property {
+    int64_t value = -1;
+    return mpv_get_property(_mpv, property, MPV_FORMAT_INT64, &value) >= 0 ? (NSInteger)value : -1;
+}
+- (NSInteger)selectedSubtitleTrack { return [self selectedTrack:"sid"]; }
+- (NSInteger)selectedAudioTrack { return [self selectedTrack:"aid"]; }
 @end
