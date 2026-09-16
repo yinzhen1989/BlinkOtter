@@ -1,20 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="A smiling otter holding a play button">
   <defs>
     <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#203A48"/>
-      <stop offset="1" stop-color="#10212D"/>
+      <stop offset="0" stop-color="#252528"/>
+      <stop offset="1" stop-color="#0C0C0E"/>
     </linearGradient>
     <linearGradient id="fur" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#E8AC79"/>
-      <stop offset="1" stop-color="#C87754"/>
+      <stop offset="0" stop-color="#E6B28D"/>
+      <stop offset="1" stop-color="#C88064"/>
     </linearGradient>
     <linearGradient id="button" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#79E9D0"/>
-      <stop offset="1" stop-color="#37C6BC"/>
+      <stop offset="0" stop-color="#FA6963"/>
+      <stop offset="1" stop-color="#D93239"/>
     </linearGradient>
   </defs>
   <rect x="32" y="32" width="960" height="960" rx="224" fill="url(#background)"/>
-  <circle cx="512" cy="485" r="380" fill="#4CD7C6" opacity=".08"/>
+  <circle cx="512" cy="485" r="380" fill="#E94743" opacity=".065"/>
   <path d="M241 766c-8-76 21-146 73-189l396-1c54 44 83 114 72 190-16 112-111 192-270 192S257 878 241 766z" fill="#B9674D"/>
   <circle cx="312" cy="305" r="83" fill="#B96850"/>
   <circle cx="712" cy="305" r="83" fill="#B96850"/>
