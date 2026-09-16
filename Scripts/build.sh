@@ -15,6 +15,8 @@ rm -rf "$APP" build/dmg/BlinkOtter.app build/dmg/Applications
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Frameworks" "$APP/Contents/Resources"
 cp build/BlinkOtter "$APP/Contents/MacOS/BlinkOtter"
 cp Resources/Info.plist "$APP/Contents/Info.plist"
+cp Resources/BlinkOtter.icns "$APP/Contents/Resources/BlinkOtter.icns"
+cp Resources/BlinkOtter-1024.png "$APP/Contents/Resources/BlinkOtter-1024.png"
 python3 Scripts/bundle_deps.py "$APP"
 
 if [[ -f LICENSE ]]; then cp LICENSE "$APP/Contents/Resources/LICENSE"; fi
@@ -22,6 +24,6 @@ codesign --force --deep --sign - "$APP"
 codesign --verify --deep --strict "$APP"
 cp -R "$APP" build/dmg/
 ln -s /Applications build/dmg/Applications
-hdiutil create -quiet -volname BlinkOtter -srcfolder build/dmg -ov -format UDZO build/BlinkOtter-0.1.0-arm64.dmg
-hdiutil verify build/BlinkOtter-0.1.0-arm64.dmg
-echo "Built $APP and $PWD/build/BlinkOtter-0.1.0-arm64.dmg"
+hdiutil create -quiet -volname BlinkOtter -srcfolder build/dmg -ov -format UDZO build/BlinkOtter-0.2.0-arm64.dmg
+hdiutil verify build/BlinkOtter-0.2.0-arm64.dmg
+echo "Built $APP and $PWD/build/BlinkOtter-0.2.0-arm64.dmg"
