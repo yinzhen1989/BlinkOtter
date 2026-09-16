@@ -1,28 +1,42 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="A smiling otter holding a play button">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#202B43"/>
-      <stop offset="1" stop-color="#0C1322"/>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#203A48"/>
+      <stop offset="1" stop-color="#10212D"/>
     </linearGradient>
-    <linearGradient id="otter" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#84F4D5"/>
-      <stop offset="1" stop-color="#44BFC6"/>
+    <linearGradient id="fur" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#E8AC79"/>
+      <stop offset="1" stop-color="#C87754"/>
     </linearGradient>
-    <linearGradient id="play" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#FFDBA1"/>
-      <stop offset="1" stop-color="#FF956E"/>
+    <linearGradient id="button" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#79E9D0"/>
+      <stop offset="1" stop-color="#37C6BC"/>
     </linearGradient>
   </defs>
-  <rect x="32" y="32" width="960" height="960" rx="225" fill="url(#bg)"/>
-  <path d="M182 675c52 121 177 206 325 206 178 0 304-100 349-239" fill="none" stroke="#30445C" stroke-width="44" stroke-linecap="round"/>
-  <g>
-    <circle cx="314" cy="347" r="76" fill="url(#otter)"/>
-    <circle cx="710" cy="347" r="76" fill="url(#otter)"/>
-    <path d="M512 244c-196 0-326 139-326 309 0 182 134 309 326 309s326-127 326-309c0-170-130-309-326-309z" fill="url(#otter)"/>
-    <path d="M512 352c-128 0-222 85-222 198 0 122 90 206 222 206s222-84 222-206c0-113-94-198-222-198z" fill="#D9FFF1" opacity=".17"/>
-    <circle cx="377" cy="493" r="21" fill="#173D4D"/>
-    <circle cx="647" cy="493" r="21" fill="#173D4D"/>
-    <path d="M462 560c-24-16-52-14-70 5-24 26-14 76 22 93 34 16 67-3 98-29 31 26 64 45 98 29 36-17 46-67 22-93-18-19-46-21-70-5-30 18-48 34-50 35-2-1-20-17-50-35z" fill="#ECFFF5"/>
-    <path d="M475 558c0-13 13-22 25-15l103 61c13 8 13 26 0 34l-103 61c-12 7-25-2-25-15z" fill="url(#play)"/>
-  </g>
+  <rect x="32" y="32" width="960" height="960" rx="224" fill="url(#background)"/>
+  <circle cx="512" cy="485" r="380" fill="#4CD7C6" opacity=".08"/>
+  <path d="M241 766c-8-76 21-146 73-189l396-1c54 44 83 114 72 190-16 112-111 192-270 192S257 878 241 766z" fill="#B9674D"/>
+  <circle cx="312" cy="305" r="83" fill="#B96850"/>
+  <circle cx="712" cy="305" r="83" fill="#B96850"/>
+  <circle cx="312" cy="305" r="49" fill="#F7BD91"/>
+  <circle cx="712" cy="305" r="49" fill="#F7BD91"/>
+  <path d="M512 207c-183 0-315 127-315 326 0 201 130 342 315 342s315-141 315-342c0-199-132-326-315-326z" fill="url(#fur)"/>
+  <path d="M266 571c23 94 81 173 153 205 30 13 61 20 93 20 139 0 237-90 247-225-42 57-126 86-247 86-121 0-205-29-246-86z" fill="#F9E9D2"/>
+  <ellipse cx="379" cy="529" rx="21" ry="27" fill="#342D30"/>
+  <ellipse cx="645" cy="529" rx="21" ry="27" fill="#342D30"/>
+  <circle cx="385" cy="520" r="7" fill="#FFFFFF"/>
+  <circle cx="651" cy="520" r="7" fill="#FFFFFF"/>
+  <ellipse cx="325" cy="591" rx="41" ry="19" fill="#F48778" opacity=".65"/>
+  <ellipse cx="699" cy="591" rx="41" ry="19" fill="#F48778" opacity=".65"/>
+  <ellipse cx="458" cy="629" rx="79" ry="56" fill="#FFF5E7"/>
+  <ellipse cx="566" cy="629" rx="79" ry="56" fill="#FFF5E7"/>
+  <path d="M473 600c-11-6-5-21 9-21h60c14 0 20 15 9 21l-29 22c-6 5-14 5-20 0z" fill="#50393A"/>
+  <path d="M512 625v23m0 0c-11 12-26 12-37 2m37-2c11 12 26 12 37 2" fill="none" stroke="#50393A" stroke-width="9" stroke-linecap="round"/>
+  <path d="M292 626l-93-13m96 38l-84 16m521-41l93-13m-96 38l84 16" fill="none" stroke="#FFF1DC" stroke-width="9" stroke-linecap="round"/>
+  <circle cx="512" cy="793" r="105" fill="#163C43" opacity=".22"/>
+  <circle cx="512" cy="781" r="101" fill="url(#button)"/>
+  <path d="M489 734c0-11 12-18 22-12l81 49c10 6 10 20 0 26l-81 49c-10 6-22-1-22-12z" fill="#FFFFFF"/>
+  <path d="M346 798c-12-32 7-68 40-77 34-9 65 17 77 44l-5 80c-48 25-94 3-112-47zm332 0c12-32-7-68-40-77-34-9-65 17-77 44l5 80c48 25 94 3 112-47z" fill="#DF9A70"/>
+  <ellipse cx="402" cy="786" rx="15" ry="22" fill="#F5C599" transform="rotate(-23 402 786)"/>
+  <ellipse cx="622" cy="786" rx="15" ry="22" fill="#F5C599" transform="rotate(23 622 786)"/>
 </svg>
