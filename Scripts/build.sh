@@ -24,6 +24,6 @@ codesign --force --deep --sign - "$APP"
 codesign --verify --deep --strict "$APP"
 cp -R "$APP" build/dmg/
 ln -s /Applications build/dmg/Applications
-hdiutil create -quiet -volname BlinkOtter -srcfolder build/dmg -ov -format UDZO build/BlinkOtter-0.2.0-arm64.dmg
-hdiutil verify build/BlinkOtter-0.2.0-arm64.dmg
-echo "Built $APP and $PWD/build/BlinkOtter-0.2.0-arm64.dmg"
+hdiutil create -quiet -volname BlinkOtter -srcfolder build/dmg -ov -format UDZO build/BlinkOtter-0.2.1-arm64.dmg
+hdiutil verify build/BlinkOtter-0.2.1-arm64.dmg
+echo "Built $APP and $PWD/build/BlinkOtter-0.2.1-arm64.dmg"
